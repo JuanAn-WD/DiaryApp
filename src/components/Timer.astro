@@ -1,0 +1,90 @@
+---
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<div class="min-w-full h-full">
+  <h1 class="bg-white text-gray-800 flex flex-row">
+    {title}
+    <div class="check"></div>
+  </h1>
+
+  <div class="flex justify-center items-center min-w-52 min-h-60 mt- ">
+    <div class="crono w-52 h-60 flex justify-center items-center">
+        <p id="cronometer" class="z-50 text-gray-800 text-3xl mt-5">
+            00:00:00
+        </p>
+    </div>
+  </div>
+
+  <button id="start">Start</button>
+  <button id="stop">Stop</button>
+  <button id="restart">Restart</button>
+</div>
+<style>
+  .check {
+    width: 34px;
+    height: 34px;
+    background-image: url("../assets/img/checkIcon.svg");
+    background-size: cover;
+  }
+  .crono {
+    background-image: url("../assets/img/crono.svg");
+    background-size: cover;
+  }
+</style>
+<script>
+  let seconds = 0;
+  let minutes = 0;
+  let hours = 0;
+  let chronometer: any;
+
+  function startChronometer() {
+    chronometer = setInterval(function () {
+      seconds++;
+      if (seconds == 60) {
+        seconds = 0;
+        minutes++;
+      }
+      if (minutes == 60) {
+        minutes = 0;
+        hours++;
+      }
+      updateChronometer();
+    }, 1000);
+  }
+
+  function stopChronometer() {
+    clearInterval(chronometer);
+  }
+
+  function restartChronometer() {
+    stopChronometer();
+    seconds = 0;
+    minutes = 0;
+    hours = 0;
+    updateChronometer();
+  }
+
+  function updateChronometer() {
+    let display = document.getElementById("cronometer");
+    let formattedTime =
+      (hours < 10 ? "0" : "") +
+      hours +
+      ":" +
+      (minutes < 10 ? "0" : "") +
+      minutes +
+      ":" +
+      (seconds < 10 ? "0" : "") +
+      seconds;
+    display.innerText = formattedTime;
+  }
+
+  document.getElementById("start").addEventListener("click", startChronometer);
+  document.getElementById("stop").addEventListener("click", stopChronometer);
+  document
+    .getElementById("restart")
+    .addEventListener("click", restartChronometer);
+</script>
